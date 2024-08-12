@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Download</title>
+    <title>Download Files</title>
     <style>
         body {
             text-align: center;
@@ -27,27 +27,74 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .file-list li {
+            margin: 10px 0;
+        }
+        .error {
+            color: red;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="https://example.com/image.jpg" alt="Download Image">
         <h1>Download Your File</h1>
-        <a id="downloadLink" class="download-btn">Download</a>
+        <a id="downloadLink" class="download-btn" style="display:none;">Download</a>
+        <ul id="fileList" class="file-list"></ul>
+        <p id="error" class="error"></p>
     </div>
 
     <script>
-        // Get the filename from the URL
         const urlParams = new URLSearchParams(window.location.search);
         const filename = urlParams.get('file');
+        const downloadLink = document.getElementById('downloadLink');
+        const fileList = document.getElementById('fileList');
+        const errorElement = document.getElementById('error');
 
-        // If filename is provided, set the download link
         if (filename) {
-            const downloadLink = document.getElementById('downloadLink');
-            downloadLink.href = `https://github.com/umittadelen/PMC/raw/main/downloads/${filename}`;
-            downloadLink.download = filename;
+            const fileUrl = `https://github.com/umittadelen/PMC/raw/main/downloads/${filename}`;
+            fetch(fileUrl, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        downloadLink.href = fileUrl;
+                        downloadLink.download = filename;
+                        downloadLink.style.display = 'inline-block';
+                    } else {
+                        errorElement.textContent = "File not found. Please check the file name.";
+                    }
+                })
+                .catch(error => {
+                    errorElement.textContent = "An error occurred while trying to fetch the file.";
+                });
         } else {
-            document.querySelector('.container').innerHTML = "<h1>File not found</h1>";
+            // Fetch the list of files from GitHub API
+            fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        data.forEach(file => {
+                            if (file.type === 'file') {
+                                const listItem = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.href = `https://umittadelen.github.io/PMC/download.html?file=${file.name}`;
+                                link.textContent = file.name;
+                                listItem.appendChild(link);
+                                fileList.appendChild(listItem);
+                            }
+                        });
+                    } else {
+                        errorElement.textContent = "Could not retrieve file list.";
+                    }
+                })
+                .catch(error => {
+                    errorElement.textContent = "An error occurred while trying to fetch the file list.";
+                });
         }
     </script>
 </body>
