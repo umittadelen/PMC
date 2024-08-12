@@ -4,61 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download Files</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --bg-color: #c2e8f4;
+            --box-bg-color: #f1d7f1;
+            --outline-color: #cec1ed;
+            --btn-text-color: #cec1ed;
+            --err-color: #ff7979;
+            --title-color: #cec1ed;
+        }
         body {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            color: #333;
+            background-color: var(--bg-color);
+            font-family: "Quicksand", sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
         .container {
-            background-color: #fff;
+            background-color: var(--box-bg-color);
+            box-shadow: 16px 16px var(--outline-color);
             padding: 40px 60px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--outline-color);
+            border-style: solid;
+            border-width: 3px;
             text-align: center;
+            transition: all 1s ease;
         }
+
+        .container:hover{
+            box-shadow: 20px 20px var(--outline-color);
+            transition: all 1s ease;
+        }
+
         h1 {
             margin-bottom: 30px;
-            color: #007bff;
+            color: var(--title-color);
             font-size: 28px;
         }
         .download-btn {
             display: inline-block;
             padding: 12px 25px;
             font-size: 16px;
-            color: #fff;
-            background-color: #007bff;
+            color: var(--btn-text-color);
+            background-color: #0000;
+            border-color: var(--outline-color);
+            border-style: solid;
+            border-width: 3px;
             text-decoration: none;
             border-radius: 5px;
+            box-shadow: 8px 8px var(--outline-color);
+            transition: all 1s ease;
+            margin-top: 20px;
         }
         .download-btn:hover {
-            background-color: #0056b3;
+            box-shadow: 11px 11px var(--outline-color);
+            transition: all 1s ease;
         }
         .file-list {
             list-style-type: none;
             padding: 0;
             margin-top: 20px;
+            font-size: 18px;
         }
         .file-list li {
             margin: 10px 0;
-            font-size: 18px;
         }
         .file-list a {
-            color: #007bff;
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: var(--btn-text-color);
+            background-color: #0000;
+            border-color: var(--outline-color);
+            border-style: solid;
+            border-width: 3px;
             text-decoration: none;
-            transition: color 0.3s ease;
+            border-radius: 5px;
+            box-shadow: 8px 8px var(--outline-color);
+            transition: all 1s ease;
+            margin-top: 20px;
         }
         .file-list a:hover {
-            color: #0056b3;
+            box-shadow: 11px 11px var(--outline-color);
+            transition: all 1s ease;
         }
         .error {
-            color: red;
+            color: var(--err-color);
             font-size: 18px;
             margin-top: 20px;
         }
@@ -67,6 +107,7 @@
 <body>
     <div class="container">
         <h1>Download Your File</h1>
+        <div id="downloadSection"></div>
         <ul id="fileList" class="file-list"></ul>
         <p id="error" class="error"></p>
     </div>
@@ -76,16 +117,15 @@
         const filename = urlParams.get('file');
         const fileList = document.getElementById('fileList');
         const errorElement = document.getElementById('error');
+        const downloadSection = document.getElementById('downloadSection');
 
         if (filename) {
             const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
-            const listItem = document.createElement('li');
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.textContent = `Download ${filename}`;
-            link.className = 'download-btn';
-            listItem.appendChild(link);
-            fileList.appendChild(listItem);
+            const downloadButton = document.createElement('a');
+            downloadButton.href = fileUrl;
+            downloadButton.textContent = `${filename}`;
+            downloadButton.className = 'download-btn';
+            downloadSection.appendChild(downloadButton);
         } else {
             // Fetch the list of files from GitHub API
             fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
