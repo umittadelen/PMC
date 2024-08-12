@@ -12,11 +12,6 @@
         .container {
             margin-top: 50px;
         }
-        img {
-            width: 200px;
-            height: auto;
-            margin-bottom: 20px;
-        }
         .download-btn {
             display: inline-block;
             padding: 10px 20px;
@@ -43,9 +38,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://example.com/image.jpg" alt="Download Image">
         <h1>Download Your File</h1>
-        <a id="downloadLink" class="download-btn" style="display:none;">Download</a>
         <ul id="fileList" class="file-list"></ul>
         <p id="error" class="error"></p>
     </div>
@@ -53,25 +46,18 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const filename = urlParams.get('file');
-        const downloadLink = document.getElementById('downloadLink');
         const fileList = document.getElementById('fileList');
         const errorElement = document.getElementById('error');
 
         if (filename) {
-            const fileUrl = `https://github.com/umittadelen/PMC/raw/main/downloads/${filename}`;
-            fetch(fileUrl, { method: 'HEAD' })
-                .then(response => {
-                    if (response.ok) {
-                        downloadLink.href = fileUrl;
-                        downloadLink.download = filename;
-                        downloadLink.style.display = 'inline-block';
-                    } else {
-                        errorElement.textContent = "File not found. Please check the file name.";
-                    }
-                })
-                .catch(error => {
-                    errorElement.textContent = "An error occurred while trying to fetch the file.";
-                });
+            const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.textContent = `Download ${filename}`;
+            link.className = 'download-btn';
+            listItem.appendChild(link);
+            fileList.appendChild(listItem);
         } else {
             // Fetch the list of files from GitHub API
             fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
@@ -82,7 +68,7 @@
                             if (file.type === 'file') {
                                 const listItem = document.createElement('li');
                                 const link = document.createElement('a');
-                                link.href = `https://umittadelen.github.io/PMC/download.html?file=${file.name}`;
+                                link.href = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${file.name}`;
                                 link.textContent = file.name;
                                 listItem.appendChild(link);
                                 fileList.appendChild(listItem);
