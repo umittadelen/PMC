@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Download</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://example.com/image.jpg" alt="Download Image">
+        <h1>Download Your File</h1>
+        <a id="downloadLink" class="download-btn">Download</a>
+    </div>
+
+    <script>
+        // Get the filename from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filename = urlParams.get('file');
+
+        // If filename is provided, set the download link
+        if (filename) {
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = `https://github.com/umittadelen/PMC/raw/main/downloads/${filename}`;
+            downloadLink.download = filename;
+        } else {
+            document.querySelector('.container').innerHTML = "<h1>File not found</h1>";
+        }
+    </script>
+</body>
+</html>
