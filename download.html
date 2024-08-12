@@ -150,6 +150,24 @@
                     errorElement.textContent = "An error occurred while trying to fetch the file list.";
                 });
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check if the environment variable exists
+            if (getComputedStyle(document.documentElement).getPropertyValue("--opera-gx-background-color-h")) {
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    :root {
+                        --bg-color: hsl(env(-opera-gx-background-color-h), env(-opera-gx-background-color-s), env(-opera-gx-background-color-l)) !important;
+                        --box-bg-color: hsl(env(-opera-gx-background-color-h), env(-opera-gx-background-color-s), env(-opera-gx-background-color-l)) !important;
+                        --outline-color: hsl(env(-opera-gx-accent-color-h), env(-opera-gx-accent-color-s), env(-opera-gx-accent-color-l)) !important;
+                        --btn-text-color: hsl(env(-opera-gx-accent-color-h), env(-opera-gx-accent-color-s), env(-opera-gx-accent-color-l)) !important;
+                        --err-color: hsl(env(-opera-gx-accent-color-h), env(-opera-gx-accent-color-s), env(-opera-gx-accent-color-l)) !important;
+                        --title-color: hsl(env(-opera-gx-accent-color-h), env(-opera-gx-accent-color-s), env(-opera-gx-accent-color-l)) !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
     </script>
 </body>
 </html>
