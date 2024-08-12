@@ -119,36 +119,44 @@
         const errorElement = document.getElementById('error');
         const downloadSection = document.getElementById('downloadSection');
 
-        if (filename) {
-            const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
-            const downloadButton = document.createElement('a');
-            downloadButton.href = fileUrl;
-            downloadButton.textContent = `${filename}`;
-            downloadButton.className = 'download-btn';
-            downloadSection.appendChild(downloadButton);
+        const referrer = document.referrer;
+        const allowedReferrer = "adfoc.us";
+
+        if (referrer.includes(allowedReferrer)) {
+            if (filename) {
+                const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
+                const downloadButton = document.createElement('a');
+                downloadButton.href = fileUrl;
+                downloadButton.textContent = filename;
+                downloadButton.className = 'download-btn';
+                downloadSection.appendChild(downloadButton);
+            } else {
+                // Fetch the list of files from GitHub API
+                fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (Array.isArray(data)) {
+                            data.forEach(file => {
+                                if (file.type === 'file') {
+                                    const listItem = document.createElement('li');
+                                    const link = document.createElement('a');
+                                    link.href = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${file.name}`;
+                                    link.textContent = file.name;
+                                    listItem.appendChild(link);
+                                    fileList.appendChild(listItem);
+                                }
+                            });
+                        } else {
+                            errorElement.textContent = "Could not retrieve file list.";
+                        }
+                    })
+                    .catch(error => {
+                        errorElement.textContent = "An error occurred while trying to fetch the file list.";
+                    });
+            }
         } else {
-            // Fetch the list of files from GitHub API
-            fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
-                .then(response => response.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        data.forEach(file => {
-                            if (file.type === 'file') {
-                                const listItem = document.createElement('li');
-                                const link = document.createElement('a');
-                                link.href = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${file.name}`;
-                                link.textContent = file.name;
-                                listItem.appendChild(link);
-                                fileList.appendChild(listItem);
-                            }
-                        });
-                    } else {
-                        errorElement.textContent = "Could not retrieve file list.";
-                    }
-                })
-                .catch(error => {
-                    errorElement.textContent = "An error occurred while trying to fetch the file list.";
-                });
+            // If the referrer is not from adfoc.us
+            errorElement.textContent = "File not found.";
         }
     </script>
 </body>
