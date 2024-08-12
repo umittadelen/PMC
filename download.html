@@ -6,21 +6,40 @@
     <title>Download Files</title>
     <style>
         body {
-            text-align: center;
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            margin-top: 50px;
+            background-color: #fff;
+            padding: 40px 60px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #007bff;
+            font-size: 28px;
         }
         .download-btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 25px;
             font-size: 16px;
             color: #fff;
             background-color: #007bff;
             text-decoration: none;
             border-radius: 5px;
-            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
         }
         .file-list {
             list-style-type: none;
@@ -29,10 +48,20 @@
         }
         .file-list li {
             margin: 10px 0;
+            font-size: 18px;
+        }
+        .file-list a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .file-list a:hover {
+            color: #0056b3;
         }
         .error {
             color: red;
             font-size: 18px;
+            margin-top: 20px;
         }
     </style>
 </head>
