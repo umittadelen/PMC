@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Files</title>
-
+    <title>Download File</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-color: #c2e8f4;
-            --box-bg-color: #f1d7f1;
-            --outline-color: #cec1ed;
-            --btn-text-color: #cec1ed;
-            --err-color: #ff7979;
-            --title-color: #cec1ed;
+            --bg-color: #c2e8f4;      /*background color*/
+            --box-bg-color: #0000;    /*fixed transparent background color*/
+            --outline-color: #cec1ed; /*outline color*/
+            --err-color: #ff7979;     /*error text color*/
         }
         body {
+            user-select: none;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
@@ -47,14 +45,14 @@
 
         h1 {
             margin-bottom: 30px;
-            color: var(--title-color);
+            color: var(--outline-color);
             font-size: 28px;
         }
         .download-btn {
             display: inline-block;
             padding: 12px 25px;
             font-size: 16px;
-            color: var(--btn-text-color);
+            color: var(--outline-color);
             background-color: #0000;
             border-color: var(--outline-color);
             border-style: solid;
@@ -82,7 +80,7 @@
             display: inline-block;
             padding: 12px 25px;
             font-size: 16px;
-            color: var(--btn-text-color);
+            color: var(--outline-color);
             background-color: #0000;
             border-color: var(--outline-color);
             border-style: solid;
@@ -113,6 +111,85 @@
     </div>
 
     <script>
+        let bgColor = "#ff0000";
+        let outlineColor = "#0000ff";
+
+        // Function to generate a random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Function to calculate the inverse color
+        function getInverseColor(hex) {
+            // Remove the hash (#) from the beginning of the hex string if present
+            hex = hex.replace('#', '');
+
+            // Convert hex to RGB
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+
+            // Invert the colors
+            r = 255 - r;
+            g = 255 - g;
+            b = 255 - b;
+
+            // Convert back to hex
+            const inverseColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+            return inverseColor;
+        }
+
+        // Set random background color and calculated inverse color for outline
+        function setColors() {
+            bgColor = getRandomColor();
+            outlineColor = getInverseColor(bgColor);
+
+            document.documentElement.style.setProperty('--bg-color', bgColor);
+            document.documentElement.style.setProperty('--outline-color', outlineColor);
+            document.documentElement.style.setProperty('--box-bg-color', '#0000'); // Fixed transparent background color
+            document.documentElement.style.setProperty('--err-color', '#ff7979'); // Keeping error color constant
+            createFavicon();
+        }
+
+        function createFavicon() {
+            var canvas = document.createElement('canvas');
+            canvas.width = 16;canvas.height = 16;
+
+            var ctx = canvas.getContext('2d');
+                //ctx.fillStyle = bgColor;
+                ctx.fillStyle = bgColor
+                ctx.roundRect(0, 0, 16, 16, 4);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.lineTo(5,1);
+                ctx.lineTo(10,1);
+                ctx.lineTo(10,8);
+                ctx.lineTo(13,8);
+                ctx.lineTo(13,10);
+                ctx.lineTo(8,14);
+                ctx.lineTo(7,14);
+                ctx.lineTo(2,10);
+                ctx.lineTo(2,8);
+                ctx.lineTo(5,8);
+                ctx.closePath();
+                ctx.fillStyle = outlineColor;
+                ctx.fill();
+
+                var link = document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = canvas.toDataURL("image/x-icon");
+                document.getElementsByTagName('head')[0].appendChild(link);
+        }
+
+        setColors();
+
         const urlParams = new URLSearchParams(window.location.search);
         const filename = urlParams.get('file');
         const fileList = document.getElementById('fileList');
@@ -122,41 +199,41 @@
         const referrer = document.referrer;
         const allowedReferrer = "adfoc.us";
 
-            if (filename) {
-                if (referrer.includes(allowedReferrer)) {
-                    const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
-                    const downloadButton = document.createElement('a');
-                    downloadButton.href = fileUrl;
-                    downloadButton.textContent = filename;
-                    downloadButton.className = 'download-btn';
-                    downloadSection.appendChild(downloadButton);
-                } else {
-                    // If the referrer is not from adfoc.us
-                    errorElement.textContent = "File not found.";
-                }
+        if (filename) {
+            if (referrer.includes(allowedReferrer)) {
+                const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
+                const downloadButton = document.createElement('a');
+                downloadButton.href = fileUrl;
+                downloadButton.textContent = "▼ "+filename;
+                downloadButton.className = 'download-btn';
+                downloadSection.appendChild(downloadButton);
             } else {
-                // Fetch the list of files from GitHub API
-                fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (Array.isArray(data)) {
-                            data.forEach(file => {
-                                if (file.type === 'file') {
-                                    const listItem = document.createElement('li');
-                                    const link = document.createElement('a');
-                                    link.textContent = file.name;
-                                    listItem.appendChild(link);
-                                    fileList.appendChild(listItem);
-                                }
-                            });
-                        } else {
-                            errorElement.textContent = "Could not retrieve file list.";
-                        }
-                    })
-                    .catch(error => {
-                        errorElement.textContent = "An error occurred while trying to fetch the file list.";
-                    });
+                // If the referrer is not from adfoc.us
+                errorElement.textContent = "File not found.";
             }
+        } else {
+            // Fetch the list of files from GitHub API
+            fetch('https://api.github.com/repos/umittadelen/PMC/contents/downloads')
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        data.forEach(file => {
+                            if (file.type === 'file') {
+                                const listItem = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.textContent = file.name;
+                                listItem.appendChild(link);
+                                fileList.appendChild(listItem);
+                            }
+                        });
+                    } else {
+                        errorElement.textContent = "Could not retrieve file list.";
+                    }
+                })
+                .catch(error => {
+                    errorElement.textContent = "An error occurred while trying to fetch the file list.";
+                });
+        }
     </script>
 </body>
 </html>
