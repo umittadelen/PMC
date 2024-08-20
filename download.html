@@ -174,7 +174,6 @@
             canvas.width = 16;canvas.height = 16;
 
             var ctx = canvas.getContext('2d');
-                //ctx.fillStyle = bgColor;
                 ctx.fillStyle = bgColor
                 ctx.roundRect(0, 0, 16, 16, 4);
                 ctx.fill();
@@ -208,11 +207,8 @@
         const errorElement = document.getElementById('error');
         const downloadSection = document.getElementById('downloadSection');
 
-        const referrer = document.referrer;
-        const allowedReferrer = "adfoc.us";
-
         if (filename) {
-            if (referrer.includes(allowedReferrer)) {
+            if (document.referrer.includes("adfoc.us")) {
                 const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
                 const downloadButton = document.createElement('a');
                 downloadButton.href = fileUrl;
@@ -246,6 +242,34 @@
                     errorElement.textContent = "An error occurred while trying to fetch the file list.";
                 });
         }
+
+        function detectDevTools() {
+            const threshold = 160; // Threshold to detect console opening
+
+            const isDevToolsOpen = () => {
+                const widthDiff = window.outerWidth - window.innerWidth > threshold;
+                const heightDiff = window.outerHeight - window.innerHeight > threshold;
+                return widthDiff || heightDiff;
+            };
+
+            // Initial check
+            if (isDevToolsOpen()) {
+                alert("Developer tools are detected!");
+                document.body.innerHTML = "";
+            }
+
+            // Continuously check for dev tools opening/closing
+            setInterval(() => {
+                if (isDevToolsOpen()) {
+                    alert("Developer tools are detected!");
+                    document.body.innerHTML = "";
+                }
+            }, 1000); // Check every second
+        }
+
+        // Call the detection function
+        detectDevTools();
+
     </script>
 </body>
 </html>
