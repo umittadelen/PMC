@@ -254,21 +254,22 @@
 
             // Initial check
             if (isDevToolsOpen()) {
-                alert("Developer tools are detected!");
-                document.body.innerHTML = "";
+                alert("Developer tools are detected! Some functionality may be restricted.");
+                document.body.innerHTML = "<h1>Developer Tools Detected<br>Please close the developer tools to continue using this site.</h1>";
             }
 
             // Continuously check for dev tools opening/closing
             setInterval(() => {
                 if (isDevToolsOpen()) {
-                    alert("Developer tools are detected!");
-                    document.body.innerHTML = "";
+                    alert("Developer tools are detected! Some functionality may be restricted.");
+                    document.body.innerHTML = "<h1>Developer Tools Detected<br>Please close the developer tools to continue using this site.</h1>";
                 }
-            }, 1000); // Check every second
+            }, 1000);
         }
 
-        // Call the detection function
+        
         detectDevTools();
+
 
     </script>
 </body>
