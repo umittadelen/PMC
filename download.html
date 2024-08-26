@@ -243,33 +243,37 @@
                 });
         }
 
-        function detectDevTools() {
-            const threshold = 160; // Threshold to detect console opening
+        function preventConsole() {
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
 
-            const isDevToolsOpen = () => {
-                const widthDiff = window.outerWidth - window.innerWidth > threshold;
-                const heightDiff = window.outerHeight - window.innerHeight > threshold;
-                return widthDiff || heightDiff;
-            };
-
-            // Initial check
-            if (isDevToolsOpen()) {
-                alert("Developer tools are detected! Some functionality may be restricted.");
-                document.body.innerHTML = "<h1>Developer Tools Detected<br>Please close the developer tools to continue using this site.</h1>";
-            }
-
-            // Continuously check for dev tools opening/closing
-            setInterval(() => {
-                if (isDevToolsOpen()) {
-                    alert("Developer tools are detected! Some functionality may be restricted.");
-                    document.body.innerHTML = "<h1>Developer Tools Detected<br>Please close the developer tools to continue using this site.</h1>";
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C, Ctrl+Shift+K, Ctrl+Shift+S
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    return false;
                 }
-            }, 1000);
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if ((e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) ||
+                    // Ctrl+U
+                    (e.ctrlKey && e.keyCode === 85) ||
+                    // Ctrl+Shift+K (Firefox)
+                    (e.ctrlKey && e.shiftKey && e.keyCode === 75) ||
+                    // Ctrl+Shift+S (Firefox Responsive Design Mode)
+                    (e.ctrlKey && e.shiftKey && e.keyCode === 83) ||
+                    // Ctrl+S to prevent saving the page
+                    (e.ctrlKey && e.keyCode === 83)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
         }
 
-        
-        detectDevTools();
-
+        // Call the function to activate the prevention
+        preventConsole();
 
     </script>
 </body>
