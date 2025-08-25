@@ -203,12 +203,13 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const filename = urlParams.get('file');
+        const devMode = urlParams.get('dev');
         const fileList = document.getElementById('fileList');
         const errorElement = document.getElementById('error');
         const downloadSection = document.getElementById('downloadSection');
 
         if (filename) {
-            if (document.referrer.includes("adfoc.us")) {
+            if (document.referrer.includes("adfoc.us") || devMode === "t") {
                 const fileUrl = `https://raw.githubusercontent.com/umittadelen/PMC/main/downloads/${filename}`;
                 const downloadButton = document.createElement('a');
                 downloadButton.href = fileUrl;
