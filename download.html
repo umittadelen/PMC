@@ -112,12 +112,16 @@
             font-weight: bold;
             font-weight: 700;
         }
-
-        ins.adsbygoogle {
-    display: block !important;
-    margin: 20px auto !important; /* center horizontally */
-    text-align: center !important;
-}
+        .ad-container {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .ad-container ins.adsbygoogle {
+            display: block !important;
+            text-align: center !important;
+        }
     </style>
 </head>
 <body>
@@ -127,6 +131,29 @@
         <ul id="fileList" class="file-list"></ul>
         <p id="error" class="error"></p>
     </div>
+
+    <div class="container">
+        <h1>Download Your File</h1>
+        <div id="downloadSection"></div>
+        <ul id="fileList" class="file-list"></ul>
+        <p id="error" class="error"></p>
+    
+        <!-- Ad wrapper -->
+        <div class="ad-container">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-5340331733632234"
+                 data-ad-slot="9175979335"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5340331733632234"
+         crossorigin="anonymous"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 
     <script>
         let bgColor = "#ff0000";
